@@ -9,13 +9,27 @@
 </head>
 <?php
 // dùng php lấy dữ liệu từ thẻ a qua method get 
-function checkdata($data,$default=''){
-    if(!isset($data)|| $data===''){
-        return $default;
-    }
-    return $data;
-}
-
+$id=isset($_GET['id'])?$_GET['id']:0;
+// ngay sau khi lấy được $id
+// truy vấn lấy về thông tin có id=$id
+$connect= new PDO(
+    'mysql:host=127.0.0.1;dbname=quan_ly_vat_nuoi;',//loại CSDL:host_lưu_trữ;dbname=tên CSDL
+    'root',// tên đăng nhập
+    ''     //password
+);
+// viết truy vấn
+    $sql="SELECT * FROM pets WHERE id=$id";
+// nạp
+    $statement=$connect->prepare($sql);
+// thực thi
+    $statement->execute();
+// lấy dữ liệu
+    $mot_con_vat=$statement->fetch();
+// Lấy thêm ds loại từ CSDL để người dùng có thể chọn và thay loại khác
+$sql_loai = "SELECT * FROM types";
+$statement_loai = $connect->prepare($sql_loai);
+$statement_loai->execute();
+$ds_loai = $statement_loai->fetchAll();
 ?>
 <body >
 <header>
@@ -26,19 +40,24 @@ function checkdata($data,$default=''){
  <main>
  <div class="m-auto max-w-[1400px]">
     <h1 class="font-mono text-[25px] py-[20px]">Form chỉnh sửa vật nuôi</h1>
-    <form action="" class="m-auto max-w-[1000px]" method='GET'>
-    <label class="block text-[20px] font-mono" for="">Mã vật nuôi</label>
-        <input type="text" name="name" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= checkdata($_GET['id'])?>">
+    <form action="tnyc_chinh_sua.php" class="m-auto max-w-[1000px]" method='POST'>
+        <label class="block text-[20px] font-mono" for="">Mã vật nuôi</label>
+        <input type="text" name="id" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= $id ?>" hidden>
         <label class="block text-[20px] font-mono" for="">Tên vật nuôi</label>
-        <input type="text" name="name" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= checkdata($_GET['name'])?>">
-        <label class="block text-[20px] font-mono" for="">Loại vật nuôi</label>
-        <input type="text" name="pet_type" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" >
+        <input type="text" name="name" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= $mot_con_vat['name'] ?>" >
+        <label class="block text-[20px] font-mono" for="">Tên loại vật nuôi</label>
+        <select name="type_id" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]">
+        <?php foreach ($ds_loai as $key => $value) { ?>
+            <option value="<?= $value['id'] ?>"> <?= $value['name'] ?></option>
+        <?php } ?>
+    </select>
+       
         <label class="block text-[20px] font-mono" for="">Tuổi</label>
-        <input type="number" name="age" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" >
+        <input type="number" name="age" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= $mot_con_vat['age']?>" >
         <label class="block text-[20px] font-mono" for="">Cân nặng</label>
-        <input type="number" name="weight" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" >
+        <input type="number" name="weight" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" value="<?= $mot_con_vat['weight']?>" >
         <label class="block text-[20px] font-mono" for="">Hình ảnh</label>
-        <input type="file" name="age" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" >
+        <input type="text" name="img" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]" >
         <button type="submit" class="block font-mono border-2 rounded py-[10px] px-[20px] mt-[20px] bg-red-400 text-white justify-end ">Chỉnh sửa</button>
     </form>
 </div>

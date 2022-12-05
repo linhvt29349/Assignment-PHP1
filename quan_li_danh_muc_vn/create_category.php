@@ -16,7 +16,7 @@
  <main>
  <div class="m-auto max-w-[1400px]">
     <h1 class="font-mono text-[25px] py-[20px]">Form tạo mới danh mục</h1>
-    <form action="" class="m-auto max-w-[1000px]">
+    <form action="tnyc_tao_moi_dm.php" class="m-auto max-w-[1000px]">
         <label class="block text-[20px] font-mono" for="">Tên danh mục</label>
         <input type="text" name="name" id="" class="border-2 w-[70%] h-[40px] border-green-400 rounded pl-[10px]">
         <button type="submit" class="block font-mono border-2 rounded py-[10px] px-[20px] mt-[20px] bg-red-400 text-white justify-end ">Tạo mới</button>

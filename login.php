@@ -16,13 +16,43 @@
  <main>
  <div class="m-auto max-w-[1480px]">
     <h1 class="font-mono text-[25px] py-[20px]">Form đăng nhập</h1>
-    <form action="" class="m-auto max-w-[1000px]">
-        <label class="block text-[20px] font-mono" for="">Email</label>
+    
+    <form action="" class="m-auto max-w-[1000px]" method="POST">
+        <label class="block text-[20px] font-mono" for="">Email <span class="text-red-500">*</span></label>
         <input type="email" name="email" id="" class="border-2 w-[70%] h-[40px]  border-green-400  rounded pl-[10px]" placeholder="Nhập email....">
-        <label class="block text-[20px] font-mono" for="">Password</label>
-        <input type="password" name="pass" id="" class="border-2 w-[70%] h-[40px]  border-green-400  rounded pl-[10px]" >
-        <button type="submit" class="block font-mono border-2 rounded py-[10px] px-[20px] mt-[20px] bg-red-400 text-white justify-end">Login</button>
+        <label class="block text-[20px] font-mono" for="">Password <span class="text-red-500">*</span></label>
+        <input type="password" name="password" id="" class="border-2 w-[70%] h-[40px]  border-green-400  rounded pl-[10px]" >
+        <button type="submit" name="btn_submit" class="block font-mono border-2 rounded py-[10px] px-[20px] mt-[20px] bg-red-500 text-white justify-end">Login</button>
     </form>
+    <?php
+  
+    if(isset($_POST['btn_submit'])){
+       if($_POST['email']==null){
+            echo "Vui lòng nhập email!";
+       }else{
+            $email=$_POST['email'];
+       }
+       if($_POST['password']==null){
+            echo "Vui lòng nhập password!";
+       }else{
+            $password=$_POST['password'];
+       }
+       $email=$_POST['email'];
+       $password=$_POST['password'];
+        if($email && $password){
+           include "./connect.php";
+           $sql="SELECT * FROM users WHERE email='$email' AND password='$password'";
+           $statement=$connect->prepare($sql);
+           $statement->execute();
+          if( $statement->fetch()){
+            header ('location:quan_ly_vat_nuoi/list_pet.php');
+          }else{
+            echo "Đăng nhập thất bại vui lòng kiểm tra lại tài khoản đăng nhập!";
+          }
+        }
+
+    }
+?>
 </div>
  </main>
 </body>
